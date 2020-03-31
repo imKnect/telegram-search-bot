@@ -9,9 +9,9 @@
 
 ## Commands
 
-- `@your_bot {keyword} {page}`: 用于搜索，`@`无参数为显示历史消息，此时翻页用`* {page}`，无页码默认第一页，`pagesize`可自行设置。
+- `@your_bot {keyword} {page}`: 用于搜索，`@`无参数为显示历史消息，此时翻页用 `* {page}`，无页码默认第一页，`pagesize` 可自行设置。
 - `/chatid`: 获取当前聊天的ID，即Group ID或User ID，此功能可在多个聊天中独立使用。
-- `/database`: 获取聊天记录的SQLite数据库文件。
+- ~~`/database`: 获取聊天记录的SQLite数据库文件。~~
 - `/help`: 获取使用帮助。
 
 ## Requirements
@@ -24,22 +24,22 @@
 
 ### 代码部署运行
 
-1. 安装依赖: `pip install -r requirements.txt`。
-2. 修改`config.py`。
-3. 轮询模式直接 `python robot.py`启动即可；如果需要WebHook模式，根据情况修改`robot.py`最后几行，并设置好`Nginx`等Web Server，比较麻烦请自行了解。
+1. 安装依赖:  `pip install -r requirements.txt`。
+2. 修改 `config.py`。
+3. 轮询模式直接 `python robot.py` 启动即可；如果需要WebHook模式，根据情况修改 `robot.py` 最后几行，并设置好 `Nginx` 等Web Server，比较麻烦请自行了解。
 
 ### 机器人创建设置
 
-1. 与[@botfather](https://t.me/botfather)对话按照步骤创建Bot，记录`token`备用。
-2. 设置Inline Mode: 选择你的Bot进入Bot Settings，Inline Mode开启，Edit inline placeholder，发送`{keyword} {page}`。
-3. 关闭[Privacy mode](https://core.telegram.org/bots#privacy-mode)，选择你的Bot进入Bot Settings，Group Privacy - Turn off。
+1. 与 [@botfather](https://t.me/botfather) 对话按照步骤创建Bot，记录 `token` 备用。
+2. 设置Inline Mode: 选择你的Bot进入Bot Settings，Inline Mode开启，Edit inline placeholder，发送 `{keyword} {page}`。
+3. 关闭 [Privacy mode](https://core.telegram.org/bots#privacy-mode)，选择你的Bot进入Bot Settings，Group Privacy - Turn off。
 4. 按照喜好设置其他选项，将Bot添加到Group。
-5. 修改`config.py`中`TOKEN`运行代码，在Group中使用`/chatid`获得`Group ID`，修改`config.py`中的`GROUP_ID`，重新运行代码即可正常使用。
+5. 修改 `config.py` 中 `TOKEN` 运行代码，在Group中使用 `/chatid@bot_username` 获得 `Group ID`，修改 `config.py` 中的 `GROUP_ID`，重新运行代码即可正常使用。
 
 ### 导入历史记录(仅初始化时可用)
 
 1. 通过Telegram官方客户端导出历史消息记录。
-2. `python init_from_exported.py`执行导入脚本。
+2. `python init_from_exported.py` 执行导入脚本。  
 ![链接脚本](https://raw.githubusercontent.com/Taosky/telegram-search-bot/master/preview/link-mode-script.png)
 
 ## Tips
@@ -62,15 +62,17 @@
 
 ### Update
 
-#### 2020-03-30
+#### 2020-03-30 (V1.1)
 
 - 初始化导入的历史消息支持定位。
-- 修复了消息中含有 `_` 、`*` 时无法更新 InlineQuery 的 bug（粗糙换用 HTML）
+- 修复了消息中含有 `_` 、`*` 时无法更新 InlineQuery 的 bug（粗糙换用 HTML）  
+- 暂时移除获取数据库命令，移除定时报时  
+- 默认打开链接模式（普通群组请在 `config.py` 中关闭）  
 
 #### 2020-01-11 (V1.0)
 
 - 新增导入历史消息记录。（仅初始化数据库可用，且无法定位）
-- 新增原消息链接模式，超级群组可用，通过点击链接定位消息，见图片。
+- 新增原消息链接模式，超级群组可用，通过点击链接定位消息，见图片。  
 ![链接](https://raw.githubusercontent.com/Taosky/telegram-search-bot/master/preview/link-mode.png)
 
 #### 2019-04-27
