@@ -38,7 +38,11 @@ def inline_caps(bot, update):
     from_user_id = update.inline_query.from_user.id
     # 检查是否为群成员
     try:
-        bot.get_chat_member(chat_id=GROUP_ID, user_id=from_user_id)
+        StatGroup =['left', 'kicked', 'none']
+        flag = bot.get_chat_member(chat_id=GROUP_ID, user_id=from_user_id).status
+        for stat in StatGroup:
+            if flag == stat:
+                return        
     except:
         return
 
