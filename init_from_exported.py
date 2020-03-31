@@ -1,19 +1,24 @@
 #!/usr/bin/env python3
 from os import listdir
+from config import LINK_ID
 from datetime import datetime
 from bs4 import BeautifulSoup
 from os.path import isfile, join, exists
 
 
 class TelegramMessage:
-    def __init__(self, date: datetime, sender: str, message: str):
+    def __init__(self, date: datetime, sender: str, senderid: int, userexist: bool, message: str, msgid: int):
         self.date = date
         self.sender = sender
+        self.senderid = senderid
+        self.userexist = userexist
         self.message = message
+        self.msgid = msgid
 
 
 def get_messages(message_files):
     objects = []
+    UserGroup = []
     last_name = ""
 
     for message_file in message_files:
@@ -26,6 +31,7 @@ def get_messages(message_files):
             textselection = mess.select_one(".text")
             dateselection = mess.select_one(".date")
             date = datetime.strptime(dateselection["title"], "%d.%m.%Y %H:%M:%S")
+            msgid = int(mess["id"][7:])
 
             name = ""
             if "joined" in mess["class"]:
@@ -35,7 +41,15 @@ def get_messages(message_files):
                 last_name = name
 
             if textselection is not None:
-                obj = TelegramMessage(date, name, textselection.text.strip())
+                userexist = False
+                _index = 0
+                if name in UserGroup:
+                    userexist = True
+                    _index = UserGroup.index(name)
+                else:
+                    UserGroup.append(name)
+                    _index = len(UserGroup) - 1
+                obj = TelegramMessage(date, name, -_index, userexist, textselection.text.strip(), msgid)
                 objects.append(obj)
 
     return objects
@@ -43,19 +57,16 @@ def get_messages(message_files):
 
 def insert_messages(messages):
     from database import DBSession, Message, User
-    for index, message in enumerate(messages):
-        new_msg = Message(id=-index, link='', text='{}: {}'.format(message.sender, message.message), video='', photo='',
-                          audio='', voice='', type='text', category='', from_id=0, date=message.date)
+    for message in messages:
+        new_msg = Message(id=message.msgid, link='https://t.me/c/{}/{}'.format(LINK_ID, message.msgid), text=message.message, video='', photo='',
+                          audio='', voice='', type='text', category='', from_id=message.senderid, date=message.date)
         session = DBSession()
         session.add(new_msg)
+        if not message.userexist:
+            new_user = User(id=message.senderid, fullname=message.sender, username='', update_time=datetime.now())
+            session.add(new_user)
         session.commit()
         session.close()
-
-    deafult_user = User(id=0, fullname='历史聊天记录', username='history', update_time=datetime.now())
-    session = DBSession()
-    session.add(deafult_user)
-    session.commit()
-    session.close()
 
 
 def main():

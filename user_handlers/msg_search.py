@@ -44,7 +44,7 @@ def inline_caps(bot, update):
 
     query = update.inline_query.query
     # recent messages
-    if not query:
+    if not query: 
         keyword, page = None, 1
 
     elif re.match(r' *\* +(\d+)', query):
@@ -63,18 +63,16 @@ def inline_caps(bot, update):
         input_message_content=InputTextMessageContent('/help')
     )]
     for message in messages:
+        msg = ((message['text'].replace('"', '&quot;', len(message['text']))).replace('<', '&lt;', len(message['text']))).replace('>', '&gt;', len(message['text']))
+        user = ((message['user'].replace('"', '&quot;', len(message['user']))).replace('<', '&lt;', len(message['user']))).replace('>', '&gt;', len(message['user']))
+        text = '<i>{}</i><a href="{}">「From {}」</a>'.format(msg, message['link'], user)
         results.append(
             InlineQueryResultArticle(
                 id=message['id'],
                 title='{}'.format(message['text'][:100]),
                 description=message['date'].strftime("%Y-%m-%d").ljust(40) + message['user'],
-                input_message_content=InputTextMessageContent(
-                    '{}[「From {}」]({})'.format(message['text'], message['user'], message['link']),
-                    parse_mode='markdown') if
-                message['link'] != '' and message['type'] == 'text' or message['id'] < 0 else InputTextMessageContent(
-                    '/locate {}'.format(message['id']))
+                input_message_content=InputTextMessageContent(text, parse_mode='HTML'))
             )
-        )
     bot.answer_inline_query(update.inline_query.id, results)
 
 

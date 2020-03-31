@@ -1,16 +1,6 @@
 
 # telegram-search-bot
 
-## 更新至V1.0版本须执行`update_to_v1.0.py`
-
-为了解决Telegram中文搜索相关问题而写的机器人，可以称之为复读机，后面可能添加更多功能。
-
-写了一篇博客文章记录了一下过程，供参考：<https://mou.science/2018/09/21/telegram-robot/>
-
-![搜索](https://raw.githubusercontent.com/Taosky/telegram-search-bot/master/preview/search.png)
-![复读0](https://raw.githubusercontent.com/Taosky/telegram-search-bot/master/preview/repeat0.png)
-![复读1](https://raw.githubusercontent.com/Taosky/telegram-search-bot/master/preview/link-mode.png)
-
 ## Feature
 
 - 消息记录、搜索、复读定位（主要功能，解决中文搜索的问题）。
@@ -71,6 +61,11 @@
 `user_jobs`中的模块用于实现定时任务（间隔运行，定时需手动判断），同上，添加`job_info`即可。
 
 ### Update
+
+#### 2020-03-30
+
+- 初始化导入的历史消息支持定位。
+- 修复了消息中含有 `_` 、`*` 时无法更新 InlineQuery 的 bug（粗糙换用 HTML）
 
 #### 2020-01-11 (V1.0)
 
